@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Formulaire</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="style.css" type="text/css">
+
+
+        <script type="text/javascript">
+
+            // func to apply a backgroundcolor to my inputs
+
+            function surligne(champ, erreur)
+            {
+                if(erreur)
+                    champ.style.backgroundColor = "#fba";
+
+                else
+                    champ.style.backgroundColor = "#98FB98";
+            }
+
+
+            // checking name by length
+
+            function verifName(champ)
+            {
+                if(champ.value.length < 3 || champ.value.length > 25)
+                {
+                    document.getElementById('ErrorName').innerHTML = 'Veuillez renseigner votre nom';
+                    surligne(champ, true);
+                    document.myForm.name.focus()
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('ErrorName').innerHTML = '';
+                    surligne(champ, false);
+                    return true;
+                }
+            }
+
+            // checking firstname by length
+
+            function verifFirstName(champ)
+            {
+                if(champ.value.length < 3 || champ.value.length > 25)
+                {
+                    document.getElementById('ErrorFirstName').innerHTML = 'Veuillez renseigner votre prénom';
+                    surligne(champ, true);
+                    document.myForm.firstname.focus()
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('ErrorFirstName').innerHTML = '';
+                    surligne(champ, false);
+                    return true;
+                }
+            }
+
+            // email check with regex, [first part] @ [second part] . [last part]
+            // ErrorMail is the Id for target the Error message
+            // focus is to target the input 
+            // surligne is to apply the background red or green (false or true)
+
+            function verifEmail(champ)
+            {
+                var regex = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,7}$/;
+                if(!regex.test(champ.value))
+                {
+                    document.getElementById('ErrorMail').innerHTML = 'Veuillez renseigner votre e-mail';
+                    surligne(champ, true);
+                    document.myForm.email.focus()
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('ErrorMail').innerHTML = '';
+                    surligne(champ, false);
+                    return true;
+                }
+            }
+
+            // Radio validation : target "name = ('gender') + radio checked or not, if not, innerHTML write a message.
+
+            function radioValidation() {
+                var radios = document.getElementsByName('gender')
+
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        document.getElementById('ErrorGender').innerHTML = '';
+                        return true; // checked
+                    }
+                };
+
+                // not checked, show error
+                document.getElementById('ErrorGender').innerHTML = 'Veuillez selectionner votre civilité !';
+                return false;
+            }
+
+            // same thing than name & firstname
+
+            function verifMessage(champ)
+            {
+                if(champ.value.length < 3 || champ.value.length > 400)
+                {
+                    document.getElementById('ErrorMessage').innerHTML = 'Laissez nous un petit message...';
+                    surligne(champ, true);
+                    document.myForm.message.focus()
+                    return false;
+                }
+                else
+                {
+                    document.getElementById('ErrorMessage').innerHTML = '';
+                    surligne(champ, false);
+                    return true;
+                }
+            }
+
+            // same than others but "value" on "-1" to target "[Type de contact]"
+
+            function verifContact(champ)
+            {
+                if( document.myForm.contact.value == "-1" )
+                {
+                    document.getElementById('ErrorContact').innerHTML = 'Veuillez préciser votre moyen de contact !';
+                    surligne(champ,true);
+                    return false;
+                }
+                else{
+                    document.getElementById('ErrorContact').innerHTML = '';
+                    surligne(champ, false);
+                    return true;
+                }
+            }
+
+            // function to validate all other functions
+
+            function validate(f)
+            {
+
+                var nameOk = verifName(f.name);
+                var emailOk = verifEmail(f.email);
+                var firstNameOk = verifFirstName(f.firstname);
+                var messageOk = verifMessage(f.message)
+                var genderOk = radioValidation(f.gender)
+                var contactOk = verifContact(f.contact)
+
+                if(nameOk && emailOk && firstNameOk && messageOk && genderOk && contactOk)
+                    return true;
+                else
+                {
+                    alert("Veuillez remplir correctement tous les champs");
+                    return false;
+                }
+            }
+
+        </script>  
+
+
+    </head>
+
+    <body>
+        <section>
+            <form name="myForm" onsubmit="return validate(this);" action="index.html">
+
+                <h2>Formulaire de Contact</h2>
+
+                <fieldset>
+                    <legend><span class="number">1</span>Informations basiques</legend>
+                                            <!-- NAME -->
+                    <label for="name">Nom:<div id="ErrorName" name="ErrorName"></div></label>
+                    <input type="text" id="name" name="user_name" placeholder="Nom" onBlur="verifName(this)">
+                                             <!-- FIRSTNAME -->                                           
+                    <label for="firstname">Prénom<div id="ErrorFirstName" name="ErrorFirstName"></div></label>
+                    <input type="text" id="firstname" name="user_firstname" Placeholder="Prénom" onBlur="verifFirstName(this)">
+                                            <!-- GENDER -->
+                    <label>Civilité:<div id="ErrorGender" name="ErrorGender"></div></label>
+                    <input type="radio" id="gender" value="Homme" name="gender"><label for="gender" class="light">Monsieur</label><br>
+                    <input type="radio" id="gender" value="Femme" name="gender"><label for="gender" class="light">Madame</label>
+                                            <!-- EMAIL -->
+                    <label for="email">Email:<div id="ErrorMail" name="ErrorMail"></div></label>
+                    <input type="email" id="email" name="email" placeholder="nomprénom@codeur.online" onBlur="verifEmail(this)">
+                                            <!-- MESSAGE -->
+                    <label for="message">Message:<div id="ErrorMessage" name="ErrorMessage"></div></label>
+                    <textarea name="message" id="message" cols="10" rows="4" placeholder="Votre message..." onblur="verifMessage(this)"></textarea>
+                                            <!-- CONTACT TYPE -->
+                    <label for="contact">Contact :<div id="ErrorContact" name="ErrorContact"></div></label>
+                    <select id="contact" name="contact">
+                        <option value="-1" selected>[Type de contact]</option>
+                        <option value="1">Professionnel</option>
+                        <option value="2">Personnel</option>
+                    </select>
+
+                </fieldset>
+
+                <button type="submit" onClick="radioValidation(); verifContact()">Valider !</button>
+
+            </form>
+        </section>
+
+
+    </body>
+</html>
